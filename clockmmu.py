@@ -39,8 +39,8 @@ class ClockMMU(MMU):
         if self.debug: print(f"Page Fault: {page_number}")
         
         # check if current pointer location is empty
-        if not self.page_table[self.pointer]:
-            self.page_table[self.pointer] = Page(page_number, False, False)
+        if len(self.page_table) < self.max_frames:
+            self.page_table.append(Page(page_number, False, False))
             self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTER
             if self.debug: print(f"Reading: {page_number}")
             return
@@ -51,8 +51,9 @@ class ClockMMU(MMU):
             if self.page_table[self.pointer].second_chance == False:
                 if self.page_table[self.pointer].dirty:
                     self.disk_writes += 1
-                    if self.debug: print(f"Disk Write: {oldestp.number}")
-                else: if self.debug: print(f"Discard: {oldestp.number}")
+                    if self.debug: print(f"Disk Write: {self.page_table[self.pointer].number}")
+                else: 
+                    if self.debug: print(f"Discard: {self.page_table[self.pointer].number}")
             
                 self.page_table[self.pointer] = Page(page_number, False, False)
                 if self.debug: print(f"Reading: {page_number}")
@@ -66,6 +67,7 @@ class ClockMMU(MMU):
 
     def write_memory(self, page_number):
         # check if it is already in the pagetable
+
         for p in self.page_table:
             if p.number == page_number:
                 if self.debug: print(f"Reading: {page_number}")
@@ -77,8 +79,8 @@ class ClockMMU(MMU):
         if self.debug: print(f"Page Fault: {page_number}")
         
         # check if current pointer location is empty
-        if not self.page_table[self.pointer]:
-            self.page_table[self.pointer] = Page(page_number, False, True)
+        if len(self.page_table) < self.max_frames:
+            self.page_table.append(Page(page_number, False, True))
             self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTER
             if self.debug: print(f"Writing: {page_number}")
             return
@@ -89,8 +91,9 @@ class ClockMMU(MMU):
             if self.page_table[self.pointer].second_chance == False:
                 if self.page_table[self.pointer].dirty:
                     self.disk_writes += 1
-                    if self.debug: print(f"Disk Write: {oldestp.number}")
-                else: if self.debug: print(f"Discard: {oldestp.number}")
+                    if self.debug: print(f"Disk Write: {self.page_table[self.pointer].number}")
+                else: 
+                    if self.debug: print(f"Discard: {self.page_table[self.pointer].number}")
             
                 self.page_table[self.pointer] = Page(page_number, False, True)
                 if self.debug: print(f"Writing: {page_number}")
