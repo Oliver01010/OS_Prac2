@@ -72,6 +72,7 @@ class ClockMMU(MMU):
         for p in self.page_table:
             if p.number == page_number:
                 if self.debug: print(f"Reading: {page_number}")
+                p.dirty = True
                 p.second_chance = True
                 return
             
