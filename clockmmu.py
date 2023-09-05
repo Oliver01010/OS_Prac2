@@ -56,6 +56,7 @@ class ClockMMU(MMU):
                     if self.debug: print(f"Discard: {self.page_table[self.pointer].number}")
             
                 self.page_table[self.pointer] = Page(page_number, False, False)
+                self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTE
                 if self.debug: print(f"Reading: {page_number}")
                 return
             
@@ -96,6 +97,7 @@ class ClockMMU(MMU):
                     if self.debug: print(f"Discard: {self.page_table[self.pointer].number}")
             
                 self.page_table[self.pointer] = Page(page_number, False, True)
+                self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTER
                 if self.debug: print(f"Writing: {page_number}")
                 return
             
