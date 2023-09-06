@@ -47,7 +47,7 @@ class ClockMMU(MMU):
         
         # loop until non-second_chance value is found, replace with current page val
         while True:
-            # if foudn val with false second chance, replace val
+            # if found val with false second chance, replace val
             if self.page_table[self.pointer].second_chance == False:
                 if self.page_table[self.pointer].dirty:
                     self.disk_writes += 1
@@ -55,7 +55,7 @@ class ClockMMU(MMU):
                 else: 
                     if self.debug: print(f"Discard: {self.page_table[self.pointer].number}")
             
-                self.page_table[self.pointer] = Page(page_number, False, False)
+                self.page_table[self.pointer] = Page(page_number, True, False)
                 self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTE
                 if self.debug: print(f"Reading: {page_number}")
                 return
@@ -97,7 +97,7 @@ class ClockMMU(MMU):
                 else: 
                     if self.debug: print(f"Discard: {self.page_table[self.pointer].number}")
             
-                self.page_table[self.pointer] = Page(page_number, False, True)
+                self.page_table[self.pointer] = Page(page_number, True, True)
                 self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTER
                 if self.debug: print(f"Writing: {page_number}")
                 return
