@@ -40,7 +40,7 @@ class ClockMMU(MMU):
         
         # check if current pointer location is empty
         if len(self.page_table) < self.max_frames:
-            self.page_table.append(Page(page_number, False, False))
+            self.page_table.append(Page(page_number, True, False))
             self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTER
             if self.debug: print(f"Reading: {page_number}")
             return
@@ -82,7 +82,7 @@ class ClockMMU(MMU):
         
         # check if current pointer location is empty
         if len(self.page_table) < self.max_frames:
-            self.page_table.append(Page(page_number, False, True))
+            self.page_table.append(Page(page_number, True, True))
             self.pointer = (self.pointer + 1) % self.max_frames # POINTER ARITHEMETIC FOR CYCLICAL POINTER
             if self.debug: print(f"Writing: {page_number}")
             return
