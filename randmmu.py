@@ -31,25 +31,37 @@ class RandMMU(MMU):
         # TODO: Implement the method to read memory
         if page_number not in self.memory:
             self.page_faults += 1
+            self.disk_reads += 1
 
             if len(self.memory) >= self.frames:
                 page_to_replace = random.choice(list(self.memory.keys()))
                 if self.memory[page_to_replace].dirty:
                     self.disk_writes += 1
                 del self.memory[page_to_replace]
-                if self.debug_mode:
-                    print(f"Replace page {page_to_replace} (random)")
+                if self.debug_mode: print(f"Replace page {page_to_replace} (random)")
             self.memory[page_number] = Page(page_number, False)
         
-        if self.debug_mode:
-            print(f"Reading page {page_number}")
+        if self.debug_mode: print(f"Reading page {page_number}")
 
     def write_memory(self, page_number):
         # TODO: Implement the method to write memory
-        self.read_memory(page_number)
-        self.memory[page_number].dirty = True
-        if self.debug_mode:
-            print(f"Write page {page_number}")
+        if page_number not in self.memory:
+            self.page_faults += 1
+            self.disk_reads += 1
+
+            if len(self.memory) >= self.frames:
+                page_to_replace = random.choice(list(self.memory.keys()))
+                if self.memory[page_to_replace].dirty:
+                    self.disk_writes += 1
+                del self.memory[page_to_replace]
+                if self.debug_mode: print(f"Replace page {page_to_replace} (random)")
+            self.memory[page_number] = Page(page_number, True)
+            
+            
+        else: # if it is already in memory i need to make it dirty
+            self.memory[page_number].dirty = True
+        
+        if self.debug_mode: print(f"Write page {page_number}")
 
     def get_total_disk_reads(self):
         # TODO: Implement the method to get total disk reads
