@@ -87,6 +87,7 @@ def main():
     print(f"total disk reads: {mmu.get_total_disk_reads()}")
     print(f"total disk writes: {mmu.get_total_disk_writes()}")
     print(f"page fault rate: {(mmu.get_total_page_faults() / no_events):.4f}")
+    print(f"Total Page Faults: {mmu.get_total_page_faults()}")
 
 if __name__ == "__main__":
     main()
